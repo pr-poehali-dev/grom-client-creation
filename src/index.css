@@ -82,4 +82,24 @@
       0 0 10px rgba(255, 8, 68, 0.3),
       inset 0 0 10px rgba(255, 8, 68, 0.1);
   }
+
+  .glow-blue {
+    text-shadow:
+      0 0 10px rgba(59, 130, 246, 0.5),
+      0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .border-glow-blue {
+    box-shadow:
+      0 0 15px rgba(59, 130, 246, 0.4),
+      inset 0 0 10px rgba(59, 130, 246, 0.1);
+  }
+
+  .gradient-blue {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(147, 51, 234, 0.1) 100%
+    );
+  }
 }
