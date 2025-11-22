@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -24,8 +24,10 @@ interface CheatModule {
 }
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<'clickgui' | 'hud' | 'configs' | 'cosmetics'>('clickgui');
+  const [activeTab, setActiveTab] = useState<'clickgui' | 'hud' | 'configs' | 'cosmetics' | 'theme'>('clickgui');
   const [searchQuery, setSearchQuery] = useState('');
+  const [themeColor, setThemeColor] = useState('#00FF41');
+  const [accentColor, setAccentColor] = useState('#3B82F6');
   
   const [modules, setModules] = useState<CheatModule[]>([
     { id: 'killaura', name: 'KillAura', description: 'Автоматическая атака ближайших мобов', enabled: false, category: 'combat', keybind: 'R', settings: { range: 4, delay: 100 } },
@@ -108,6 +110,22 @@ const Index = () => {
     m.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  useEffect(() => {
+    document.documentElement.style.setProperty('--theme-primary', themeColor);
+    document.documentElement.style.setProperty('--theme-accent', accentColor);
+  }, [themeColor, accentColor]);
+
+  const themePresets = [
+    { name: 'Green Matrix', primary: '#00FF41', accent: '#00CC33' },
+    { name: 'Blue Ocean', primary: '#3B82F6', accent: '#60A5FA' },
+    { name: 'Purple Galaxy', primary: '#A855F7', accent: '#C084FC' },
+    { name: 'Red Fire', primary: '#EF4444', accent: '#F87171' },
+    { name: 'Cyan Neon', primary: '#06B6D4', accent: '#22D3EE' },
+    { name: 'Orange Sunset', primary: '#F97316', accent: '#FB923C' },
+    { name: 'Pink Candy', primary: '#EC4899', accent: '#F472B6' },
+    { name: 'Yellow Electric', primary: '#EAB308', accent: '#FACC15' },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-blue-950/20">
       <div className="flex h-screen">
@@ -164,6 +182,18 @@ const Index = () => {
             >
               <Icon name="Sparkles" size={18} />
               <span className="font-medium">Cosmetics</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('theme')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                activeTab === 'theme' 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'hover:bg-secondary text-foreground'
+              }`}
+            >
+              <Icon name="Palette" size={18} />
+              <span className="font-medium">Theme</span>
             </button>
           </nav>
 
@@ -436,6 +466,198 @@ const Index = () => {
                     </Button>
                   </Card>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'theme' && (
+            <div className="p-6">
+              <h2 className="text-3xl font-bold mb-6">Настройка темы</h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <Card className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Пользовательские цвета</h3>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-3">Основной цвет</label>
+                      <div className="flex gap-4 items-center">
+                        <input
+                          type="color"
+                          value={themeColor}
+                          onChange={(e) => setThemeColor(e.target.value)}
+                          className="w-20 h-20 rounded-lg cursor-pointer border-2 border-border"
+                        />
+                        <div className="flex-1">
+                          <Input
+                            value={themeColor}
+                            onChange={(e) => setThemeColor(e.target.value)}
+                            placeholder="#00FF41"
+                            className="font-mono"
+                          />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Основной цвет интерфейса и активных элементов
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-3">Акцентный цвет</label>
+                      <div className="flex gap-4 items-center">
+                        <input
+                          type="color"
+                          value={accentColor}
+                          onChange={(e) => setAccentColor(e.target.value)}
+                          className="w-20 h-20 rounded-lg cursor-pointer border-2 border-border"
+                        />
+                        <div className="flex-1">
+                          <Input
+                            value={accentColor}
+                            onChange={(e) => setAccentColor(e.target.value)}
+                            placeholder="#3B82F6"
+                            className="font-mono"
+                          />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Дополнительный цвет для акцентов и эффектов
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-border">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => {
+                          setThemeColor('#00FF41');
+                          setAccentColor('#3B82F6');
+                          toast.success('Цвета сброшены на стандартные');
+                        }}
+                      >
+                        <Icon name="RotateCcw" size={16} className="mr-2" />
+                        Сбросить на стандартные
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Превью темы</h3>
+                  <div className="space-y-4">
+                    <div 
+                      className="p-6 rounded-lg border-2 transition-all"
+                      style={{ 
+                        borderColor: themeColor,
+                        backgroundColor: `${themeColor}10`,
+                        boxShadow: `0 0 20px ${themeColor}30`
+                      }}
+                    >
+                      <h4 
+                        className="text-2xl font-bold mb-2"
+                        style={{ 
+                          color: themeColor,
+                          textShadow: `0 0 10px ${themeColor}80`
+                        }}
+                      >
+                        GROM CLIENT
+                      </h4>
+                      <p className="text-sm text-muted-foreground">Основной цвет темы</p>
+                    </div>
+
+                    <div 
+                      className="p-6 rounded-lg border-2 transition-all"
+                      style={{ 
+                        borderColor: accentColor,
+                        backgroundColor: `${accentColor}10`,
+                        boxShadow: `0 0 20px ${accentColor}30`
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div 
+                          className="w-3 h-3 rounded-full animate-pulse"
+                          style={{ backgroundColor: accentColor }}
+                        />
+                        <span 
+                          className="font-semibold"
+                          style={{ color: accentColor }}
+                        >
+                          Акцентный цвет
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Дополнительные элементы</p>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button 
+                        size="sm" 
+                        style={{ 
+                          backgroundColor: themeColor,
+                          color: '#000'
+                        }}
+                      >
+                        Кнопка
+                      </Button>
+                      <Badge 
+                        style={{ 
+                          backgroundColor: themeColor,
+                          color: '#000'
+                        }}
+                      >
+                        Badge
+                      </Badge>
+                      <div 
+                        className="h-8 rounded flex items-center justify-center text-xs font-medium"
+                        style={{ 
+                          backgroundColor: `${accentColor}20`,
+                          color: accentColor,
+                          border: `1px solid ${accentColor}`
+                        }}
+                      >
+                        Card
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Готовые пресеты</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {themePresets.map((preset, idx) => (
+                    <Card
+                      key={idx}
+                      className="p-4 cursor-pointer transition-all hover:scale-105"
+                      onClick={() => {
+                        setThemeColor(preset.primary);
+                        setAccentColor(preset.accent);
+                        toast.success(`Тема "${preset.name}" применена`);
+                      }}
+                      style={{
+                        borderColor: preset.primary,
+                        background: `linear-gradient(135deg, ${preset.primary}15, ${preset.accent}15)`
+                      }}
+                    >
+                      <div className="flex gap-2 mb-3">
+                        <div 
+                          className="w-8 h-8 rounded-lg border-2"
+                          style={{ 
+                            backgroundColor: preset.primary,
+                            borderColor: preset.primary
+                          }}
+                        />
+                        <div 
+                          className="w-8 h-8 rounded-lg border-2"
+                          style={{ 
+                            backgroundColor: preset.accent,
+                            borderColor: preset.accent
+                          }}
+                        />
+                      </div>
+                      <h4 className="font-semibold text-sm">{preset.name}</h4>
+                    </Card>
+                  ))}
+                </div>
               </div>
             </div>
           )}
