@@ -13,20 +13,58 @@ interface CheatModule {
   name: string;
   description: string;
   enabled: boolean;
+  category: 'combat' | 'movement' | 'render' | 'player' | 'world' | 'misc';
   settings?: {
     range?: number;
     speed?: number;
+    delay?: number;
+    radius?: number;
   };
 }
 
 const Index = () => {
   const [modules, setModules] = useState<CheatModule[]>([
-    { id: 'killaura', name: 'KillAura', description: 'Автоматическая атака ближайших мобов', enabled: false, settings: { range: 4 } },
-    { id: 'esp', name: 'ESP', description: 'Подсветка игроков и мобов через стены', enabled: false },
-    { id: 'fly', name: 'Fly', description: 'Режим полета', enabled: false, settings: { speed: 1 } },
-    { id: 'speed', name: 'Speed', description: 'Увеличение скорости передвижения', enabled: false, settings: { speed: 2 } },
-    { id: 'nofall', name: 'NoFall', description: 'Отключение урона от падения', enabled: false },
-    { id: 'freecam', name: 'Freecam', description: 'Свободная камера', enabled: false },
+    { id: 'killaura', name: 'KillAura', description: 'Автоматическая атака ближайших мобов', enabled: false, category: 'combat', settings: { range: 4, delay: 100 } },
+    { id: 'criticals', name: 'Criticals', description: 'Критические удары на каждой атаке', enabled: false, category: 'combat' },
+    { id: 'velocity', name: 'Velocity', description: 'Уменьшение отбрасывания при ударе', enabled: false, category: 'combat' },
+    { id: 'autoarmor', name: 'AutoArmor', description: 'Автоматическое надевание брони', enabled: false, category: 'combat' },
+    { id: 'antibot', name: 'AntiBot', description: 'Игнорирование ботов при атаке', enabled: false, category: 'combat' },
+    { id: 'targetstrafe', name: 'TargetStrafe', description: 'Круговое движение вокруг цели', enabled: false, category: 'combat', settings: { radius: 2 } },
+    
+    { id: 'fly', name: 'Fly', description: 'Режим полета', enabled: false, category: 'movement', settings: { speed: 1 } },
+    { id: 'speed', name: 'Speed', description: 'Увеличение скорости передвижения', enabled: false, category: 'movement', settings: { speed: 2 } },
+    { id: 'nofall', name: 'NoFall', description: 'Отключение урона от падения', enabled: false, category: 'movement' },
+    { id: 'spider', name: 'Spider', description: 'Подъем по стенам', enabled: false, category: 'movement' },
+    { id: 'step', name: 'Step', description: 'Подъем на высокие блоки', enabled: false, category: 'movement' },
+    { id: 'longjump', name: 'LongJump', description: 'Дальние прыжки', enabled: false, category: 'movement' },
+    { id: 'jesus', name: 'Jesus', description: 'Ходьба по воде', enabled: false, category: 'movement' },
+    { id: 'airjump', name: 'AirJump', description: 'Прыжки в воздухе', enabled: false, category: 'movement' },
+    
+    { id: 'esp', name: 'ESP', description: 'Подсветка игроков и мобов через стены', enabled: false, category: 'render' },
+    { id: 'freecam', name: 'Freecam', description: 'Свободная камера', enabled: false, category: 'render' },
+    { id: 'tracers', name: 'Tracers', description: 'Линии к игрокам', enabled: false, category: 'render' },
+    { id: 'chams', name: 'Chams', description: 'Окрашивание игроков', enabled: false, category: 'render' },
+    { id: 'fullbright', name: 'FullBright', description: 'Максимальная яркость', enabled: false, category: 'render' },
+    { id: 'nametags', name: 'NameTags', description: 'Улучшенные ники игроков', enabled: false, category: 'render' },
+    { id: 'xray', name: 'XRay', description: 'Видимость руд через блоки', enabled: false, category: 'render' },
+    
+    { id: 'norotate', name: 'NoRotate', description: 'Отключение поворота головы', enabled: false, category: 'player' },
+    { id: 'noslow', name: 'NoSlow', description: 'Отключение замедления', enabled: false, category: 'player' },
+    { id: 'autoeat', name: 'AutoEat', description: 'Автоматическое употребление еды', enabled: false, category: 'player' },
+    { id: 'autotool', name: 'AutoTool', description: 'Автовыбор инструмента', enabled: false, category: 'player' },
+    { id: 'inventorymove', name: 'InventoryMove', description: 'Движение с открытым инвентарем', enabled: false, category: 'player' },
+    
+    { id: 'nuker', name: 'Nuker', description: 'Быстрая ломка блоков вокруг', enabled: false, category: 'world', settings: { radius: 3 } },
+    { id: 'scaffold', name: 'Scaffold', description: 'Автоматическая постройка под ногами', enabled: false, category: 'world' },
+    { id: 'timer', name: 'Timer', description: 'Ускорение игры', enabled: false, category: 'world', settings: { speed: 2 } },
+    { id: 'fastbreak', name: 'FastBreak', description: 'Ускоренная ломка блоков', enabled: false, category: 'world' },
+    { id: 'cheststealer', name: 'ChestStealer', description: 'Автокража из сундуков', enabled: false, category: 'world' },
+    
+    { id: 'autoclicker', name: 'AutoClicker', description: 'Автоматические клики', enabled: false, category: 'misc', settings: { delay: 100 } },
+    { id: 'antiafk', name: 'AntiAFK', description: 'Защита от кика за неактивность', enabled: false, category: 'misc' },
+    { id: 'clicktp', name: 'ClickTP', description: 'Телепортация по клику', enabled: false, category: 'misc' },
+    { id: 'middleclick', name: 'MiddleClickPearl', description: 'Бросок эндер жемчуга по СКМ', enabled: false, category: 'misc' },
+    { id: 'autorespawn', name: 'AutoRespawn', description: 'Автореспавн после смерти', enabled: false, category: 'misc' },
   ]);
 
   const [configs] = useState([
@@ -100,9 +138,39 @@ const Index = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="modules" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {modules.map((module) => (
+          <TabsContent value="modules" className="space-y-6">
+            <div className="flex gap-2 flex-wrap mb-4">
+              <Button variant="outline" size="sm" onClick={() => setModules(prev => prev.map(m => ({ ...m, enabled: false })))}>
+                <Icon name="X" size={14} className="mr-2" />
+                Отключить все
+              </Button>
+              {['combat', 'movement', 'render', 'player', 'world', 'misc'].map(cat => (
+                <Badge key={cat} variant="secondary" className="text-xs px-3 py-1 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+                  {cat === 'combat' && '⚔️ Бой'}
+                  {cat === 'movement' && '🏃 Движение'}
+                  {cat === 'render' && '👁️ Отображение'}
+                  {cat === 'player' && '👤 Игрок'}
+                  {cat === 'world' && '🌍 Мир'}
+                  {cat === 'misc' && '🔧 Разное'}
+                </Badge>
+              ))}
+            </div>
+
+            {(['combat', 'movement', 'render', 'player', 'world', 'misc'] as const).map(category => (
+              <div key={category}>
+                <h3 className="text-xl font-semibold mb-3 text-primary flex items-center gap-2">
+                  {category === 'combat' && '⚔️ Бой'}
+                  {category === 'movement' && '🏃 Движение'}
+                  {category === 'render' && '👁️ Отображение'}
+                  {category === 'player' && '👤 Игрок'}
+                  {category === 'world' && '🌍 Мир'}
+                  {category === 'misc' && '🔧 Разное'}
+                  <Badge variant="outline" className="ml-auto">
+                    {modules.filter(m => m.category === category).length} модулей
+                  </Badge>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {modules.filter(m => m.category === category).map((module) => (
                 <Card key={module.id} className={`p-6 transition-all duration-300 ${module.enabled ? 'border-glow-green border-primary' : ''}`}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
@@ -123,12 +191,12 @@ const Index = () => {
                   </div>
                   
                   {module.settings && module.enabled && (
-                    <div className="space-y-4 pt-4 border-t border-border">
+                    <div className="space-y-3 pt-4 border-t border-border">
                       {module.settings.range !== undefined && (
                         <div>
                           <div className="flex justify-between mb-2">
-                            <label className="text-sm font-medium">Дальность</label>
-                            <span className="text-sm text-primary">{module.settings.range}</span>
+                            <label className="text-xs font-medium">Дальность</label>
+                            <span className="text-xs text-primary">{module.settings.range}</span>
                           </div>
                           <Slider
                             value={[module.settings.range]}
@@ -142,8 +210,8 @@ const Index = () => {
                       {module.settings.speed !== undefined && (
                         <div>
                           <div className="flex justify-between mb-2">
-                            <label className="text-sm font-medium">Скорость</label>
-                            <span className="text-sm text-primary">{module.settings.speed}x</span>
+                            <label className="text-xs font-medium">Скорость</label>
+                            <span className="text-xs text-primary">{module.settings.speed}x</span>
                           </div>
                           <Slider
                             value={[module.settings.speed]}
@@ -154,11 +222,43 @@ const Index = () => {
                           />
                         </div>
                       )}
+                      {module.settings.delay !== undefined && (
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <label className="text-xs font-medium">Задержка</label>
+                            <span className="text-xs text-primary">{module.settings.delay}ms</span>
+                          </div>
+                          <Slider
+                            value={[module.settings.delay]}
+                            onValueChange={(value) => updateModuleSetting(module.id, 'delay', value[0])}
+                            min={50}
+                            max={500}
+                            step={10}
+                          />
+                        </div>
+                      )}
+                      {module.settings.radius !== undefined && (
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <label className="text-xs font-medium">Радиус</label>
+                            <span className="text-xs text-primary">{module.settings.radius}</span>
+                          </div>
+                          <Slider
+                            value={[module.settings.radius]}
+                            onValueChange={(value) => updateModuleSetting(module.id, 'radius', value[0])}
+                            min={1}
+                            max={6}
+                            step={1}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </Card>
-              ))}
-            </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </TabsContent>
 
           <TabsContent value="hud" className="space-y-4">
@@ -243,26 +343,22 @@ const Index = () => {
           <TabsContent value="info" className="space-y-4">
             <Card className="p-6">
               <h3 className="text-2xl font-bold mb-6 text-primary glow-green">GROM CLIENT</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between py-3 border-b border-border">
-                  <span className="text-muted-foreground">Версия клиента</span>
-                  <span className="font-semibold">1.0.0</span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <div className="text-3xl font-bold text-primary">{modules.length}</div>
+                  <div className="text-sm text-muted-foreground mt-1">Всего модулей</div>
                 </div>
-                <div className="flex justify-between py-3 border-b border-border">
-                  <span className="text-muted-foreground">Версия Minecraft</span>
-                  <span className="font-semibold">1.16.5</span>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <div className="text-3xl font-bold text-primary">{enabledCount}</div>
+                  <div className="text-sm text-muted-foreground mt-1">Активно</div>
                 </div>
-                <div className="flex justify-between py-3 border-b border-border">
-                  <span className="text-muted-foreground">Загружено модулей</span>
-                  <span className="font-semibold">{modules.length}</span>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <div className="text-3xl font-bold">1.16.5</div>
+                  <div className="text-sm text-muted-foreground mt-1">Minecraft</div>
                 </div>
-                <div className="flex justify-between py-3 border-b border-border">
-                  <span className="text-muted-foreground">Активных модулей</span>
-                  <span className="font-semibold text-primary">{enabledCount}</span>
-                </div>
-                <div className="flex justify-between py-3">
-                  <span className="text-muted-foreground">Статус</span>
-                  <Badge variant="default">Онлайн</Badge>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <div className="text-3xl font-bold">v1.0</div>
+                  <div className="text-sm text-muted-foreground mt-1">Версия</div>
                 </div>
               </div>
             </Card>
